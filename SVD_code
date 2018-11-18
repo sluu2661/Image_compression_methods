@@ -1,0 +1,31 @@
+plt.imshow(A)
+plt.show()
+
+red = A[:,:,0]
+green = A[:,:,1]
+blue = A[:,:,2]
+
+k = 50 #use the first k dominant singular values of RGB matrix
+
+u, s, v = np.linalg.svd(red)
+r_approx = np.dot(np.dot(u[:,0:k],np.diag(s[0:k])),v[0:k,:])
+
+u, s, v = np.linalg.svd(green)
+g_approx = np.dot(np.dot(u[:,0:k],np.diag(s[0:k])),v[0:k,:])
+
+u, s, v = np.linalg.svd(blue)
+b_approx = np.dot(np.dot(u[:,0:k],np.diag(s[0:k])),v[0:k,:])
+
+reconstruc = np.zeros((512,512,3),dtype=int)
+reconstruc[:,:,0] = r_approx
+reconstruc[:,:,1] = g_approx
+reconstruc[:,:,2] = b_approx
+
+fig, axarr = plt.subplots(1,2, figsize=(8,8))
+
+axarr[0].imshow(A)
+axarr[0].set_title("Original large image")
+axarr[1].imshow(reconstruc)
+axarr[1].set_title("SVD compress large image")
+
+plt.show()
